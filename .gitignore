@@ -1,4 +1,4 @@
-# Linux/WSL: required so ./logs and ./config are writable.
+# Optional local overrides.
 .env
 .env.*
 

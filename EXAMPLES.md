@@ -30,7 +30,7 @@ All three: `schedule=None`. No extra data files.
 
 | DAG | File | What to look at |
 |---|---|---|
-| `xcom_taskflow` | `dags/xcom_taskflow.py` | Return a value; `multiple_outputs=True` splits a dict into XCom keys |
+| `xcom_taskflow` | `dags/xcom_taskflow.py` | Return a value; `multiple_outputs=True` also XComs each dict key (`doubled`, `squared`) plus `return_value` |
 | `xcom_manual` | `dags/xcom_manual.py` | `ti.xcom_push` / `xcom_pull` (named keys, dict, two upstreams) |
 | `xcom_hybrid` | `dags/xcom_hybrid.py` | TaskFlow `return`, then `xcom_pull(..., key="return_value")` |
 

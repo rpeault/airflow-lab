@@ -20,7 +20,7 @@ def xcom_taskflow():
         return 42
 
     @task(multiple_outputs=True)
-    def split(value: int) -> dict:
+    def split(value: int) -> dict[str, int]:
         return {"doubled": value * 2, "squared": value**2}
 
     @task

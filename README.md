@@ -10,24 +10,21 @@ A local **`.venv` is optional** (Cursor only: debug, Jupyter, Ruff, pytest). It 
 ## Start Airflow
 
 ```bash
-echo "AIRFLOW_UID=$(id -u)" > .env
 docker compose up -d
 ```
 
 First start takes about a minute. UI: http://localhost:8080 (no login).
 
-`.env` sets `AIRFLOW_UID` to your host user so `./logs` and `./config` are writable. Without it on Linux/WSL, tasks crash (and the UI may show a misleading `hostname_callable` error). `.env` is gitignored.
-
 ```bash
 docker compose logs -f airflow-standalone
 docker compose exec airflow-standalone airflow dags list
 docker compose down          # stop
-docker compose down -v       # stop and wipe the database
+docker compose down -v       # stop and wipe the database + log/config volumes
 ```
 
 The **Docker** extension in Cursor can do the same (Compose Up / Down, logs, exec).
 
-Task logs: `logs/` (host). Generated `airflow.cfg`: `config/` (gitignored).
+Task logs and generated `airflow.cfg` live in Docker volumes (`airflow-logs`, `airflow-config`), not `./logs` / `./config` on the host. That avoids the Linux/WSL uid mismatch (image user `50000` vs your user). View logs in the UI.
 
 ## Run a DAG
 
@@ -73,8 +70,6 @@ python3 include/scripts/generate_dag.py
 
 ```
 dags/                 DAGs + common/ helpers
-logs/                 task logs (gitignored; writable via AIRFLOW_UID)
-config/               generated airflow.cfg (gitignored)
 plugins/
 include/              templates, JSON for generated DAGs
 data/                 sample files
@@ -82,7 +77,7 @@ tests/                pytest for dags/common/ (not full DAG runs)
 notebooks/lab.ipynb
 EXAMPLES.md           what each DAG shows (files, generator)
 requirements-dev.txt  pendulum, Ruff, pytest, Jupyter (IDE only)
-docker-compose.yaml   image tag = Airflow version
+docker-compose.yaml   image tag = Airflow version (volumes: postgres, logs, config)
 ```
 
 ## IDE (optional)
