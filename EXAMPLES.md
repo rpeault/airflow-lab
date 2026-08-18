@@ -27,8 +27,8 @@ How to run Airflow: [README.md](README.md).
 ### `task_group`
 
 - **File:** `dags/task_group.py` · **schedule:** none
-- `@task_group` from `airflow.sdk`. Inner tasks nest under `process` in the Graph view (`process.add_five` → `process.times_two`).
-- Same TaskFlow wiring as other examples: `start` returns `10`, the group adds 5 then doubles, `finish` prints `30`.
+- `@task_group` from `airflow.sdk`. The group function returns `None`; `chain(start(), process(10), finish())` wires the whole group.
+- Inner tasks nest under `process` (`process.add_five` → `process.times_two`). `times_two` prints `30`.
 
 ### XCom (same idea, three wirings)
 

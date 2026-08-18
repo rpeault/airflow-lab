@@ -56,7 +56,7 @@ Longer notes (CSVs, generator, what each DAG does): [EXAMPLES.md](EXAMPLES.md).
 | DAG | What it shows |
 |---|---|
 | `task_chain` | DAG options, `chain()`, fan-out |
-| `task_group` | `@task_group` nests tasks; values in and out |
+| `task_group` | `@task_group` nests tasks; `chain()` around the group |
 | `xcom_taskflow` / `xcom_manual` / `xcom_hybrid` | Pass data: return values, push/pull, mixed |
 | `branch_taskflow` / `branch_manual` | `@task.branch` (arg vs `xcom_pull`) + join |
 | `map_files` | `.map()` vs `.expand()` / `.partial()` |

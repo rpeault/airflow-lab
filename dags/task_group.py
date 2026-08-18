@@ -1,10 +1,10 @@
 """Task groups with @task_group.
 
-Related tasks nest in the Graph view. Pass a value into the group and
-return from it like any TaskFlow task.
+Related tasks nest in the Graph view. The group function returns None;
+wire start and finish to the group with chain().
 """
 
-from airflow.sdk import dag, task
+from airflow.sdk import chain, dag, task
 
 from common.defaults import DEFAULT_ARGS, START_DATE
 
@@ -15,32 +15,36 @@ from common.defaults import DEFAULT_ARGS, START_DATE
     catchup=False,
     default_args=DEFAULT_ARGS,
     tags=["lab", "task_group"],
-    description="@task_group nests related tasks; return values flow in and out.",
+    description="@task_group nests related tasks; wire the group with chain().",
 )
 def task_group():
     from airflow.sdk import task_group
 
     @task
-    def start() -> int:
-        return 10
+    def start():
+        print("start")
 
-    @task_group(tooltip="Add 5, then double")  # type: ignore[arg-type]
-    def process(value):
+    @task
+    def finish():
+        print("done")
+
+    @task_group
+    def process(value: int) -> None:
+        """Add 5, then double."""
+
         @task
-        def add_five(n) -> int:
+        def add_five(n: int):
             return n + 5
 
         @task
-        def times_two(n) -> int:
-            return n * 2
+        def times_two(n):
+            result = n * 2
+            print(result)
+            return result
 
-        return times_two(add_five(value))
+        times_two(add_five(value))
 
-    @task
-    def finish(result):
-        print(result)
-
-    finish(process(start()))
+    chain(start(), process(10), finish())
 
 
 task_group()
