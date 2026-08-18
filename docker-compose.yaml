@@ -1,6 +1,4 @@
-# Two services: Postgres + apache/airflow standalone (LocalExecutor).
-# Official folders: dags, logs, plugins, config.
-# Not the full Celery Compose file:
+# Postgres + apache/airflow standalone (LocalExecutor). Lab only.
 # https://airflow.apache.org/docs/apache-airflow/stable/howto/docker-compose/index.html
 
 services:
@@ -21,11 +19,13 @@ services:
 
   airflow-standalone:
     image: apache/airflow:3.3.1
+    hostname: airflow-standalone
     command: standalone
     environment:
       AIRFLOW__CORE__EXECUTOR: LocalExecutor
       AIRFLOW__CORE__LOAD_EXAMPLES: "false"
       AIRFLOW__CORE__SIMPLE_AUTH_MANAGER_ALL_ADMINS: "True"
+      AIRFLOW__CORE__HOSTNAME_CALLABLE: airflow.utils.net.get_host_ip_address
       AIRFLOW__DATABASE__SQL_ALCHEMY_CONN: postgresql+psycopg2://airflow:airflow@postgres/airflow
       AIRFLOW__DAG_PROCESSOR__DAG_BUNDLE_CONFIG_LIST: >-
         [{"name":"dags-folder","classpath":"airflow.dag_processing.bundles.local.LocalDagBundle","kwargs":{"path":"/opt/airflow/dags"}}]

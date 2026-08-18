@@ -1,4 +1,4 @@
-# Local overrides (optional). This lab does not require a .env file.
+# Linux/WSL: required so ./logs and ./config are writable.
 .env
 .env.*
 

@@ -10,10 +10,13 @@ A local **`.venv` is optional** (Cursor only: debug, Jupyter, Ruff, pytest). It 
 ## Start Airflow
 
 ```bash
+echo "AIRFLOW_UID=$(id -u)" > .env
 docker compose up -d
 ```
 
 First start takes about a minute. UI: http://localhost:8080 (no login).
+
+`.env` sets `AIRFLOW_UID` to your host user so `./logs` and `./config` are writable. Without it on Linux/WSL, tasks crash (and the UI may show a misleading `hostname_callable` error). `.env` is gitignored.
 
 ```bash
 docker compose logs -f airflow-standalone
@@ -24,12 +27,7 @@ docker compose down -v       # stop and wipe the database
 
 The **Docker** extension in Cursor can do the same (Compose Up / Down, logs, exec).
 
-If `logs/` is not writable on Linux/WSL:
-
-```bash
-echo "AIRFLOW_UID=$(id -u)" > .env
-docker compose up -d --force-recreate
-```
+Task logs: `logs/` (host). Generated `airflow.cfg`: `config/` (gitignored).
 
 ## Run a DAG
 
@@ -75,9 +73,9 @@ python3 include/scripts/generate_dag.py
 
 ```
 dags/                 DAGs + common/ helpers
-logs/                 container logs (gitignored)
-plugins/
+logs/                 task logs (gitignored; writable via AIRFLOW_UID)
 config/               generated airflow.cfg (gitignored)
+plugins/
 include/              templates, JSON for generated DAGs
 data/                 sample files
 tests/                pytest for dags/common/ (not full DAG runs)
