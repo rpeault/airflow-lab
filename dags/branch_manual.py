@@ -1,19 +1,24 @@
+"""Branching with xcom_pull, then join skipped tasks with a trigger rule."""
+
 from airflow.sdk import dag, task
-from pendulum import datetime, now
+from pendulum import now
+
+from common.defaults import DEFAULT_ARGS, START_DATE
 
 
 @dag(
     schedule=None,
-    start_date=datetime(2026, 1, 1),
+    start_date=START_DATE,
     catchup=False,
-    tags=["branch"],
+    default_args=DEFAULT_ARGS,
+    tags=["lab", "branch", "manual"],
+    description="@task.branch reads XCom, then a join task uses none_failed_min_one_success.",
 )
-def branch_by_condition():
+def branch_manual():
 
     @task
     def get_day_type() -> str:
-        today = now()
-        if today.weekday() < 5:
+        if now().weekday() < 5:
             return "weekday"
         return "weekend"
 
@@ -39,4 +44,4 @@ def branch_by_condition():
     get_day_type() >> choose_branch() >> [run_weekday_job(), run_weekend_job()] >> finalize()
 
 
-branch_by_condition()
+branch_manual()

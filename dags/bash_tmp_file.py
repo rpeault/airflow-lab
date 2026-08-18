@@ -1,15 +1,19 @@
+"""Inline @task.bash: create, test, then read a file."""
+
 from airflow.sdk import dag, task
-from pendulum import datetime
+
+from common.defaults import DEFAULT_ARGS, START_DATE
 
 
 @dag(
-    schedule="@daily",
-    start_date=datetime(2025, 1, 1),
+    schedule=None,
+    start_date=START_DATE,
     catchup=False,
-    description="DAG to check data",
-    tags=["data_engineering"],
+    default_args=DEFAULT_ARGS,
+    tags=["lab", "bash"],
+    description="Bash tasks write and test /tmp/dummy, then a Python task reads it.",
 )
-def check_tmp_file():
+def bash_tmp_file():
 
     @task.bash
     def create_file():
@@ -27,4 +31,4 @@ def check_tmp_file():
     create_file() >> check_file_exists() >> read_file()
 
 
-check_tmp_file()
+bash_tmp_file()

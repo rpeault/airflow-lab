@@ -1,13 +1,15 @@
-from pendulum import datetime
-
 from airflow.sdk import dag, task
+
+from common.defaults import DEFAULT_ARGS, START_DATE
 
 
 @dag(
-    start_date=datetime(2022, 1, 1),
+    start_date=START_DATE,
     schedule="SCHEDULE_INTERVAL_HOLDER",
     catchup=False,
-    tags=["dynamic"],
+    default_args=DEFAULT_ARGS,
+    tags=["lab", "generated"],
+    description="Generated DAG: extract, process, and print INPUT_HOLDER.",
 )
 def process_DAG_ID_HOLDER():
 
@@ -16,16 +18,14 @@ def process_DAG_ID_HOLDER():
         return "INPUT_HOLDER"
 
     @task
-    def process(ti) -> str:
-        filename = ti.xcom_pull(task_ids="extract", key="return_value")
+    def process(filename: str) -> str:
         return filename
 
     @task
-    def send_email(ti):
-        filename = ti.xcom_pull(task_ids="process", key="return_value")
+    def send_email(filename: str):
         print(filename)
 
-    extract() >> process() >> send_email()
+    send_email(process(extract()))
 
 
 process_DAG_ID_HOLDER()

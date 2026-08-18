@@ -9,5 +9,9 @@
   },
   "terminal.integrated.env.linux": {
     "PYTHONPATH": "${workspaceFolder}/dags:${workspaceFolder}/plugins"
-  }
+  },
+  "cursorpyright.analysis.extraPaths": [
+    "${workspaceFolder}/dags",
+    "${workspaceFolder}/plugins"
+  ]
 }

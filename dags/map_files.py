@@ -1,21 +1,25 @@
-import random
+"""Dynamic task mapping: expand() plus partial()."""
 
 from airflow.sdk import dag, task
-from pendulum import datetime
+
+from common.defaults import DEFAULT_ARGS, START_DATE
 
 DOWNLOAD_FOLDER = "/usr/local"
 
 
 @dag(
-    schedule="@daily",
-    start_date=datetime(2022, 1, 1),
+    schedule=None,
+    start_date=START_DATE,
     catchup=False,
+    default_args=DEFAULT_ARGS,
+    tags=["lab", "mapping"],
+    description="One mapped task per file; folder is fixed with partial().",
 )
-def download_files():
+def map_files():
 
     @task
     def get_files() -> list[str]:
-        return [f"file_{nb}" for nb in range(random.randint(3, 5))]
+        return [f"file_{nb}" for nb in range(3, 6)]
 
     @task
     def download_file(folder: str, file: str) -> str:
@@ -30,4 +34,4 @@ def download_files():
     file_list >> files >> print_files()
 
 
-download_files()
+map_files()

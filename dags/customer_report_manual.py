@@ -1,53 +1,49 @@
-from airflow.sdk import dag, task
-from pendulum import datetime
+"""Same customer report pipeline, wired with explicit xcom_push / xcom_pull."""
 
-from common import customer_report as report_logic
+from airflow.sdk import dag, task
+
+from common import customer_report as report
+from common.defaults import DEFAULT_ARGS, START_DATE
 
 
 @dag(
     schedule=None,
-    start_date=datetime(2022, 1, 1),
+    start_date=START_DATE,
     catchup=False,
-    tags=["example", "manual-routing"],
+    default_args=DEFAULT_ARGS,
+    tags=["lab", "example", "manual"],
+    description="Customer report: each task pushes and pulls named XCom keys.",
 )
-def customer_report_manual_routing():
+def customer_report_manual():
+
     @task
     def extract_customers(ti):
-        customers = ["alice", "bob", "charlie"]
-        ti.xcom_push(key="customers", value=customers)
+        ti.xcom_push(key="customers", value=report.SAMPLE_CUSTOMERS)
 
     @task
     def extract_orders(ti):
-        orders = [
-            {"customer": "alice", "amount": 100},
-            {"customer": "bob", "amount": 50},
-            {"customer": "alice", "amount": 25},
-        ]
-        ti.xcom_push(key="orders", value=orders)
+        ti.xcom_push(key="orders", value=report.SAMPLE_ORDERS)
 
     @task
     def clean_customers(ti):
         customers = ti.xcom_pull(task_ids="extract_customers", key="customers")
-        cleaned = report_logic.clean_customers(customers)
-        ti.xcom_push(key="clean_customers", value=cleaned)
+        ti.xcom_push(key="clean_customers", value=report.clean_customers(customers))
 
     @task
     def clean_orders(ti):
         orders = ti.xcom_pull(task_ids="extract_orders", key="orders")
-        cleaned = report_logic.clean_orders(orders)
-        ti.xcom_push(key="clean_orders", value=cleaned)
+        ti.xcom_push(key="clean_orders", value=report.clean_orders(orders))
 
     @task
     def build_report(ti):
         customers = ti.xcom_pull(task_ids="clean_customers", key="clean_customers")
         orders = ti.xcom_pull(task_ids="clean_orders", key="clean_orders")
-        report = report_logic.build_report(customers, orders)
-        ti.xcom_push(key="report", value=report)
+        ti.xcom_push(key="report", value=report.build_report(customers, orders))
 
     @task
     def publish_report(ti):
-        report = ti.xcom_pull(task_ids="build_report", key="report")
-        print(f"Publishing report: {report}")
+        report_data = ti.xcom_pull(task_ids="build_report", key="report")
+        print(f"Publishing report: {report_data}")
 
     extract_customers_task = extract_customers()
     extract_orders_task = extract_orders()
@@ -61,4 +57,4 @@ def customer_report_manual_routing():
     [clean_customers_task, clean_orders_task] >> build_report_task >> publish_report_task
 
 
-customer_report_manual_routing()
+customer_report_manual()

@@ -1,17 +1,17 @@
-from airflow.sdk import chain, dag, task
-from pendulum import datetime
+"""DAG options, retries, and `chain()` for mixed linear / parallel dependencies."""
 
-default_args = {
-    "retries": 3,
-}
+from airflow.sdk import chain, dag, task
+
+from common.defaults import DEFAULT_ARGS, START_DATE
 
 
 @dag(
     schedule="@daily",
-    start_date=datetime(2026, 1, 1),
-    default_args=default_args,
-    description="A simple DAG to test the Airflow scheduler",
-    tags=["team_a", "test"],
+    start_date=START_DATE,
+    catchup=False,
+    default_args=DEFAULT_ARGS,
+    tags=["lab", "chain"],
+    description="Scheduled DAG: chain() with a fan-out then fan-in.",
     max_consecutive_failed_dag_runs=3,
 )
 def task_chain():
@@ -37,9 +37,6 @@ def task_chain():
         print("Task E")
 
     chain(task_a(), [task_b(), task_d()], [task_c(), task_e()])
-    # a=task_a()
-    # a >> task_b() >> task_c()
-    # a >> task_d() >> task_e()
 
 
 task_chain()

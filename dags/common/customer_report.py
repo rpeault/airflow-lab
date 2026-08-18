@@ -8,6 +8,13 @@ Keep Airflow wiring in the DAG file. Put logic here so you can:
 
 from __future__ import annotations
 
+SAMPLE_CUSTOMERS = [" alice", "BOB", "charlie "]
+SAMPLE_ORDERS = [
+    {"customer": "alice", "amount": 100},
+    {"customer": "bob", "amount": 0},
+    {"customer": "alice", "amount": 25},
+]
+
 
 def clean_customers(customers: list[str]) -> list[str]:
     return [name.strip().title() for name in customers]
@@ -29,13 +36,6 @@ def build_report(customers: list[str], orders: list[dict]) -> dict:
 
 
 if __name__ == "__main__":
-    sample_customers = [" alice", "BOB", "charlie "]
-    sample_orders = [
-        {"customer": "alice", "amount": 100},
-        {"customer": "bob", "amount": 0},
-        {"customer": "alice", "amount": 25},
-    ]
-    cleaned_customers = clean_customers(sample_customers)
-    cleaned_orders = clean_orders(sample_orders)
-    report = build_report(cleaned_customers, cleaned_orders)
-    print(report)
+    cleaned_customers = clean_customers(SAMPLE_CUSTOMERS)
+    cleaned_orders = clean_orders(SAMPLE_ORDERS)
+    print(build_report(cleaned_customers, cleaned_orders))
