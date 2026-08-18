@@ -1,0 +1,13 @@
+{
+  "python.analysis.extraPaths": ["${workspaceFolder}/dags", "${workspaceFolder}/plugins"],
+  "python.testing.pytestEnabled": true,
+  "python.testing.pytestArgs": ["tests"],
+  "jupyter.notebookFileRoot": "${workspaceFolder}",
+  "[python]": {
+    "editor.defaultFormatter": "charliermarsh.ruff",
+    "editor.formatOnSave": true
+  },
+  "terminal.integrated.env.linux": {
+    "PYTHONPATH": "${workspaceFolder}/dags:${workspaceFolder}/plugins"
+  }
+}

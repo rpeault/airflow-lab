@@ -1,0 +1,5 @@
+# Optional tools for the IDE (not used by Docker).
+ruff>=0.16
+pytest>=8.0
+ipykernel>=6.0
+

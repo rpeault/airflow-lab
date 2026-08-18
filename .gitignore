@@ -1,0 +1,24 @@
+# Local overrides (optional). This lab does not require a .env file.
+.env
+.env.*
+
+logs/**
+!logs/.gitignore
+config/airflow.cfg
+airflow.cfg
+airflow.db
+*.pid
+.airflow-local/
+
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+.ipynb_checkpoints/
+
+.DS_Store
+Thumbs.db
+*.swp
