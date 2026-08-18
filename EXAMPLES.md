@@ -44,9 +44,9 @@ All three: `schedule=None`. No extra data files.
 ### `map_files`
 
 - **File:** `dags/map_files.py` · **schedule:** none
-- `get_files` returns `file_3` … `file_5` (not the CSVs in `data/`).
-- `download_file.partial(folder=...).expand(file=...)` — one mapped task per name; folder is fixed.
-- Downstream bash task prints the mapped XCom list.
+- Two independent pipelines in one DAG (`.map()` is not the same as dynamic task mapping):
+  - `list_paths().map(append_data)` transforms each path in XCom. Still two tasks (`list_paths` → `print_paths`), not one per item.
+  - `get_files` returns `file_3` … `file_5` (not the CSVs in `data/`). `download_file.partial(folder=...).expand(file=...)` creates one mapped task instance per name; folder is fixed. Downstream bash task prints the mapped XCom list.
 
 ### Sensors
 

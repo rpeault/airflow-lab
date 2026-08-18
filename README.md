@@ -58,7 +58,7 @@ Longer notes (CSVs, generator, what each DAG does): [EXAMPLES.md](EXAMPLES.md).
 | `task_chain` | DAG options, `chain()`, fan-out |
 | `xcom_taskflow` / `xcom_manual` / `xcom_hybrid` | Pass data: return values, push/pull, mixed |
 | `branch_taskflow` / `branch_manual` | `@task.branch` (arg vs `xcom_pull`) + join |
-| `map_files` | `.expand()` / `.partial()` |
+| `map_files` | `.map()` vs `.expand()` / `.partial()` |
 | `sensor_files` / `sensor_http` | `@task.sensor` (reschedule vs poke + `PokeReturnValue`) |
 | `http_get` | `HttpOperator` GET + XCom to a TaskFlow task |
 | `salesforce_query` | `SalesforceHook` SOQL (connection `salesforce_default`) |
