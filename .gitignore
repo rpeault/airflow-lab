@@ -1,4 +1,4 @@
-# Optional local overrides.
+# Linux/WSL: AIRFLOW_UID so ./logs and ./config are writable.
 .env
 .env.*
 

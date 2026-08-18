@@ -1,4 +1,5 @@
 {
+  "explorer.excludeGitIgnore": false,
   "python.analysis.extraPaths": ["${workspaceFolder}/dags", "${workspaceFolder}/plugins"],
   "python.testing.pytestEnabled": true,
   "python.testing.pytestArgs": ["tests"],
