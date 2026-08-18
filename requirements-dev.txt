@@ -1,6 +1,6 @@
 # Optional tools for the IDE (not used by Docker).
+pendulum>=3.0
 ruff>=0.16
 pytest>=8.0
 ipykernel>=6.0
 notebook>=7.0
-

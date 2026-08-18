@@ -1,0 +1,26 @@
+---
+description: Always use Astronomer Airflow skills for this lab
+alwaysApply: true
+---
+
+# Airflow skills (this project)
+
+This repo is an **Airflow 3** lab. Runtime is **Docker Compose** (`docker-compose.yaml`, image `apache/airflow:3.3.1`), not Astro CLI. Local `.venv` is IDE-only.
+
+Before answering or editing, **read and follow the matching Astronomer plugin skill** (the `SKILL.md` files listed in available skills). Do this as the first action. Do not wait for the user to name a skill.
+
+| Task | Skill |
+|---|---|
+| List/run/debug DAGs, logs, connections, health | `airflow` |
+| Write or change DAG code | `authoring-dags` |
+| Test a DAG and fix failures | `testing-dags` |
+| Deep DAG failure diagnosis | `debugging-dags` |
+| Start/stop/logs for local Airflow | Compose (`docker compose`); not `astro dev` |
+| Plugins / custom UI | `airflow-plugins` |
+| HITL operators | `airflow-hitl` |
+| Lineage inlets/outlets | `annotating-task-lineage` |
+| Airflow 2 → 3 migration, upgrade, or 2.x imports/APIs | `migrating-airflow-2-to-3` |
+
+Conventions: `from airflow.sdk import dag, task`; DAG id = file stem = function name; shared code in `dags/common/`.
+
+Do not `pip install` into `.venv` yourself. Put Ruff/pytest/Jupyter/`pendulum` in `requirements-dev.txt`. Never add `apache-airflow` there — tell the user the constrained install from the README.
