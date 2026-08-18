@@ -1,4 +1,4 @@
-# Optional tools for the IDE (not used by Docker).
+# IDE .venv only (Ruff, pytest, Jupyter). Not used by Docker.
 pendulum>=3.0
 ruff>=0.16
 pytest>=8.0

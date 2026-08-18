@@ -12,3 +12,7 @@ known-first-party = ["common"]
 [tool.pytest.ini_options]
 pythonpath = ["dags", "plugins"]
 testpaths = ["tests"]
+
+[tool.pyright]
+venvPath = "."
+venv = ".venv"

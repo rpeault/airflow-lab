@@ -1,0 +1,4 @@
+# Extra Python packages for the Docker image only (not .venv).
+# Installed in the Dockerfile with the Airflow constraint file.
+# Do not put apache-airflow here — the Dockerfile pins it.
+apache-airflow-providers-salesforce==5.14.2

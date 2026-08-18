@@ -23,4 +23,4 @@ Before answering or editing, **read and follow the matching Astronomer plugin sk
 
 Conventions: `from airflow.sdk import dag, task`; DAG id = file stem = function name; shared code in `dags/common/`.
 
-Do not `pip install` into `.venv` yourself. Put Ruff/pytest/Jupyter/`pendulum` in `requirements-dev.txt`. Never add `apache-airflow` there — tell the user the constrained install from the README.
+Do not `pip install` into `.venv` yourself. Put Ruff/pytest/Jupyter/`pendulum` in `requirements-local.txt`. Never add `apache-airflow` there — tell the user the constrained install from the README. Image extras go in `requirements-docker.txt`.

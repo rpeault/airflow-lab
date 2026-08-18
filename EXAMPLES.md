@@ -55,6 +55,20 @@ All three: `schedule=None`. No extra data files.
 | `sensor_files` | `dags/sensor_files.py` | Mapped `@task.sensor` in **reschedule** mode | Waits for `data/data_1.csv`, `data_2.csv`, `data_3.csv` (already present, so it should succeed quickly) |
 | `sensor_http` | `dags/sensor_http.py` | `@task.sensor` in **poke** mode + `PokeReturnValue` | GET `https://www.google.com`; passes the URL downstream. Needs outbound network from the container |
 
+### `http_get`
+
+- **File:** `dags/http_get.py` · **schedule:** none
+- `HttpOperator` GET `/posts` on connection `api`.
+- Connection host should be `https://jsonplaceholder.typicode.com` (`AIRFLOW_CONN_API` in Compose; already created in the DB). `api.publicapis.org` no longer exists (DNS fails). Recreate the stack after changing Compose env, or edit the connection in the UI.
+- `response_filter` XComs the JSON body; `print_post` reads it via `.output`. Needs outbound network from the container.
+
+### `salesforce_query`
+
+- **File:** `dags/salesforce_query.py` · **schedule:** none
+- `SalesforceHook.make_query` runs `SELECT Id, Name FROM Account LIMIT 5`.
+- Provider is **not** in the stock Airflow image; the lab `Dockerfile` installs `apache-airflow-providers-salesforce` from `requirements-docker.txt`. Rebuild after changing that file.
+- Create connection **`salesforce_default`** in the UI (type Salesforce): login, password, Extra `{"security_token": "...", "domain": "login"}` (use `"test"` for a sandbox). Do not commit real credentials. Trigger only after the connection exists.
+
 ### Bash and templates
 
 | DAG | File | What to look at | Files |

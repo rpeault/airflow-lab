@@ -18,7 +18,12 @@ services:
     restart: always
 
   airflow-standalone:
-    image: apache/airflow:3.3.1
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        AIRFLOW_VERSION: "3.3.1"
+    image: airflow-lab:3.3.1
     hostname: airflow-standalone
     command: standalone
     environment:
@@ -32,6 +37,8 @@ services:
       AIRFLOW__API_AUTH__JWT_SECRET: lab-jwt-secret
       AIRFLOW_CONFIG: /opt/airflow/config/airflow.cfg
       AIRFLOW_CONN_FS_DEFAULT: '{"conn_type": "fs", "extra": {"path": "/opt/airflow/data"}}'
+      AIRFLOW_CONN_HTTP_DEFAULT: '{"conn_type": "http", "host": "https://jsonplaceholder.typicode.com"}'
+      AIRFLOW_CONN_API: '{"conn_type": "http", "host": "https://jsonplaceholder.typicode.com"}'
     volumes:
       - ./dags:/opt/airflow/dags
       - ./logs:/opt/airflow/logs
