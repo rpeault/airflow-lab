@@ -2,6 +2,22 @@
   "version": "0.2.0",
   "configurations": [
     {
+      "name": "DAG test (current file)",
+      "type": "debugpy",
+      "request": "launch",
+      "program": "${file}",
+      "console": "integratedTerminal",
+      "cwd": "${workspaceFolder}",
+      "env": {
+        "PYTHONPATH": "${workspaceFolder}/dags:${workspaceFolder}/plugins",
+        "AIRFLOW_HOME": "${workspaceFolder}/.airflow-local",
+        "AIRFLOW__CORE__LOAD_EXAMPLES": "false",
+        "AIRFLOW__CORE__SIMPLE_AUTH_MANAGER_ALL_ADMINS": "True",
+        "AIRFLOW__API_AUTH__JWT_SECRET": "lab-jwt-secret-local",
+        "AIRFLOW__DAG_PROCESSOR__DAG_BUNDLE_CONFIG_LIST": "[{\"name\":\"dags-folder\",\"classpath\":\"airflow.dag_processing.bundles.local.LocalDagBundle\",\"kwargs\":{\"path\":\"${workspaceFolder}/dags\"}}]"
+      }
+    },
+    {
       "name": "Debug current file",
       "type": "debugpy",
       "request": "launch",

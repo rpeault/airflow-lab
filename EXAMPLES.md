@@ -3,7 +3,7 @@
 What each example shows, which files it uses, and how generated DAGs are built.
 Trigger `schedule=None` DAGs in the UI. `@daily` DAGs can also be started by the scheduler.
 
-How to run Airflow: [README.md](README.md).
+How to run Airflow, debug, and daily commands: [README.md](README.md) (start with **Quick reference**).
 
 ## Shared pieces
 
@@ -12,11 +12,18 @@ How to run Airflow: [README.md](README.md).
 | `dags/common/defaults.py` | `START_DATE`, `DEFAULT_ARGS` (retries) |
 | `dags/common/paths.py` | `data_dir()`, `include_dir()` (repo root in the IDE, `/opt/airflow` in Docker) |
 | `dags/common/customer_report.py` | Pure Python for the customer-report DAGs (pytest + F5) |
+| `dags/common/dag_test.py` | Local SQLite + `dag.test()` so IDE breakpoints hit `@task` |
 | `dags/.airflowignore` | Ignores `common/` so helpers are not parsed as DAGs |
 | `data/data_1.csv`, `data_2.csv`, `data_3.csv` | Tiny sample files (`id,value`) for `sensor_files` |
 | `include/` | Templates, JSON configs, bash script used by DAGs |
 
 ## Core patterns
+
+### `debug_ide`
+
+- **File:** `dags/debug_ide.py` · **schedule:** none
+- Smallest DAG for IDE breakpoints. `__main__` calls `common.dag_test.run(dag)` (in-process `dag.test()`, SQLite in `.airflow-local/`).
+- `add_five(10)` prints `15`; `times_two` prints `30`. How to F5: [README.md](README.md#debug-ide-breakpoints).
 
 ### `task_chain`
 
@@ -53,6 +60,11 @@ All three: `schedule=None`. No extra data files.
 - Two independent pipelines in one DAG (`.map()` is not the same as dynamic task mapping):
   - `list_paths().map(append_data)` transforms each path in XCom. Still two tasks (`list_paths` → `print_paths`), not one per item.
   - `get_files` returns `file_3` … `file_5` (not the CSVs in `data/`). `download_file.partial(folder=...).expand(file=...)` creates one mapped task instance per name; folder is fixed. Downstream bash task prints the mapped XCom list.
+
+### `zip_files`
+
+- **File:** `dags/zip_files.py` · **schedule:** none
+- `XComArg.zip()` merges three lists (paths, names, extensions) into tuples; a downstream task prints each triple.
 
 ### Sensors
 
